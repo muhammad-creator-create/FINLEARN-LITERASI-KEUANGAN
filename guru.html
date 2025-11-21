@@ -1,0 +1,3133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finlearn - Dashboard Guru</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== VARIABLES & RESET ===== */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --info: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --text-muted: #adb5bd;
+            --border-color: #dee2e6;
+            --shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --sidebar-width: 280px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1d23;
+            --bg-secondary: #252a32;
+            --bg-tertiary: #2d323a;
+            --text-primary: #e9ecef;
+            --text-secondary: #adb5bd;
+            --text-muted: #6c757d;
+            --border-color: #495057;
+            --light: #343a40;
+            --dark: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ===== LAYOUT ===== */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+        }
+
+        .sidebar-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: var(--spacing-lg) 0;
+            overflow-y: auto;
+        }
+
+        .menu-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .menu-title {
+            padding: 0 var(--spacing-lg) var(--spacing-sm);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .menu-item.active {
+            background: var(--primary);
+            color: white;
+            border-left-color: var(--primary);
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.sidebar-open {
+            margin-left: 0;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--spacing-md) var(--spacing-xl);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb .current-page {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .user-dropdown:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .dropdown-item.text-danger {
+            color: var(--danger);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: var(--spacing-sm) 0;
+        }
+
+        /* ===== CONTENT WRAPPER ===== */
+        .content-wrapper {
+            padding: var(--spacing-xl);
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .section-header {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card.primary {
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .stat-card.warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .stat-card.danger {
+            border-left: 4px solid var(--danger);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-card.primary .stat-icon {
+            background: var(--primary);
+        }
+
+        .stat-card.success .stat-icon {
+            background: var(--success);
+        }
+
+        .stat-card.warning .stat-icon {
+            background: var(--warning);
+        }
+
+        .stat-card.danger .stat-icon {
+            background: var(--danger);
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== CONTENT GRID ===== */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+        }
+
+        .form-container {
+            grid-column: 1;
+        }
+
+        .table-container {
+            grid-column: 2;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .card-body {
+            padding: var(--spacing-lg);
+        }
+
+        /* ===== FORMS ===== */
+        .modern-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* ===== FILE UPLOAD ===== */
+        .file-upload {
+            position: relative;
+        }
+
+        .file-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-xl);
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--primary);
+            background: var(--bg-tertiary);
+        }
+
+        .file-upload-label i {
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .file-upload-label span {
+            display: block;
+            font-weight: 500;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .file-upload-label p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            line-height: 1;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--text-muted);
+        }
+
+        .btn-sm {
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 0.8rem;
+        }
+
+        .btn-lg {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            font-size: 1rem;
+        }
+
+        /* ===== TABLES ===== */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .modern-table th,
+        .modern-table td {
+            padding: var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modern-table th {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modern-table tbody tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* ===== BADGES ===== */
+        .badge {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .badge-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .badge-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .badge-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        /* ===== SOAL CONTAINER ===== */
+        .soal-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+
+        .soal-item {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .soal-pertanyaan {
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+
+        .soal-pilihan {
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin-bottom: var(--spacing-xs);
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .soal-jawaban {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--success);
+            color: white;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .soal-actions {
+            margin-top: var(--spacing-md);
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        /* ===== STATUS ALERTS ===== */
+        .status-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .status-alert.info {
+            background: rgba(72, 149, 239, 0.1);
+            border: 1px solid var(--info);
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            color: var(--info);
+        }
+
+        .alert-content h4 {
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-primary);
+        }
+
+        .alert-content p {
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        /* ===== MODALS ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: var(--spacing-lg);
+        }
+
+        .modal-footer {
+            padding: var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: flex-end;
+        }
+
+        /* ===== SEARCH BOX ===== */
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: var(--spacing-md);
+            color: var(--text-muted);
+        }
+
+        .search-box input {
+            padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            width: 200px;
+        }
+
+        /* ===== FILTER GROUP ===== */
+        .filter-group {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .form-select-sm {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-container,
+            .table-container {
+                grid-column: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar-close {
+                display: block;
+            }
+            
+            .sidebar-toggle {
+                display: block;
+            }
+            
+            .header {
+                padding: var(--spacing-md);
+            }
+            
+            .content-wrapper {
+                padding: var(--spacing-md);
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .card-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+            
+            .filter-group {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: var(--spacing-md);
+            }
+        }
+
+        .d-flex { display: flex; }
+        .align-items-center { align-items: center; }
+        .mr-3 { margin-right: var(--spacing-lg); }
+        .font-weight-600 { font-weight: 600; }
+        .text-muted { color: var(--text-muted); }
+        .text-danger { color: var(--danger); }
+        .small { font-size: 0.875rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span class="logo-text">Finlearn</span>
+                </div>
+                <button class="sidebar-close" id="sidebarClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-section">
+                    <div class="menu-title">MAIN MENU</div>
+                    <a href="#" class="menu-item active" data-target="dashboard">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="menu-item" data-target="tambah-siswa">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Kelola Siswa</span>
+                    </a>
+                    <a href="#" class="menu-item" data-target="kelola-materi">
+                        <i class="fas fa-book"></i>
+                        <span>Kelola Materi</span>
+                    </a>
+                </div>
+                
+                <div class="menu-section">
+                    <div class="menu-title">EVALUASI</div>
+                    <a href="#" class="menu-item" data-target="kelola-pretest">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Pre-test</span>
+                    </a>
+                    <a href="#" class="menu-item" data-target="kelola-kuis">
+                        <i class="fas fa-tasks"></i>
+                        <span>Kuis</span>
+                    </a>
+                    <a href="#" class="menu-item" data-target="hasil-siswa">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Hasil Siswa</span>
+                    </a>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">AKSES SISWA</div>
+                    <a href="#" class="menu-item" id="bukaHalamanSiswa">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>Buka Halaman Siswa</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">Guru Keuangan</div>
+                        <div class="user-role">Educator</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="breadcrumb">
+                        <span>Dashboard</span>
+                        <i class="fas fa-chevron-right"></i>
+                        <span class="current-page">Overview</span>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="action-btn theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                    <div class="user-menu">
+                        <button class="user-dropdown" id="userDropdown">
+                            <div class="avatar-sm">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <span>Guru</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="#" class="dropdown-item" id="bukaModeSiswa">
+                                <i class="fas fa-user-graduate"></i>
+                                Buka Mode Siswa
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item text-danger" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Sections -->
+            <div class="content-wrapper">
+                <!-- Dashboard -->
+                <section id="dashboard" class="content-section active">
+                    <div class="section-header">
+                        <h1 class="section-title">Dashboard Overview</h1>
+                        <p class="section-subtitle">Monitor aktivitas pembelajaran literasi keuangan digital</p>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card primary">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-value" id="totalSiswa">0</h3>
+                                <p class="stat-label">Total Siswa</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card success">
+                            <div class="stat-icon">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-value" id="totalMateri">0</h3>
+                                <p class="stat-label">Materi Tersedia</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card warning">
+                            <div class="stat-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-value" id="pretestAktif">Tidak</h3>
+                                <p class="stat-label">Pre-test Aktif</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card danger">
+                            <div class="stat-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-value" id="kuisAktif">Tidak</h3>
+                                <p class="stat-label">Kuis Aktif</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="content-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Aksi Cepat</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary" id="btnTambahSiswa">
+                                        <i class="fas fa-user-plus"></i>
+                                        Tambah Siswa
+                                    </button>
+                                    <button class="btn btn-success" id="btnUploadMateri">
+                                        <i class="fas fa-upload"></i>
+                                        Upload Materi
+                                    </button>
+                                    <button class="btn btn-warning" id="btnKelolaPretest">
+                                        <i class="fas fa-clipboard-check"></i>
+                                        Kelola Pre-test
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Status Sistem</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="status-alert info">
+                                    <div class="alert-icon">
+                                        <i class="fas fa-info-circle"></i>
+                                    </div>
+                                    <div class="alert-content">
+                                        <h4>Sistem Berjalan Normal</h4>
+                                        <p>Semua fitur siap digunakan. Siswa dapat mengakses kuis melalui siswa.html</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Kelola Siswa -->
+                <section id="tambah-siswa" class="content-section">
+                    <div class="section-header">
+                        <h1 class="section-title">Kelola Data Siswa</h1>
+                        <p class="section-subtitle">Tambah, edit, dan kelola data siswa</p>
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="form-container">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Tambah Siswa Baru</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form id="formTambahSiswa" class="modern-form">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="namaSiswa" class="form-label">
+                                                    <i class="fas fa-user"></i>
+                                                    Nama Lengkap
+                                                </label>
+                                                <input type="text" id="namaSiswa" class="form-input" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nisSiswa" class="form-label">
+                                                    <i class="fas fa-id-card"></i>
+                                                    NIS
+                                                </label>
+                                                <input type="text" id="nisSiswa" class="form-input" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="kelasSiswa" class="form-label">
+                                                <i class="fas fa-school"></i>
+                                                Kelas
+                                            </label>
+                                            <select id="kelasSiswa" class="form-select" required>
+                                                <option value="">Pilih Kelas</option>
+                                                <option value="X IPA 1">X IPA 1</option>
+                                                <option value="X IPA 2">X IPA 2</option>
+                                                <option value="X IPS 1">X IPS 1</option>
+                                                <option value="X IPS 2">X IPS 2</option>
+                                                <option value="XI IPA 1">XI IPA 1</option>
+                                                <option value="XI IPA 2">XI IPA 2</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-plus"></i>
+                                            Tambah Siswa
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Daftar Siswa</h3>
+                                    <div class="card-actions">
+                                        <button class="btn btn-sm btn-outline" id="btnExportSiswa">
+                                            <i class="fas fa-download"></i>
+                                            Export
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="tabelSiswa" class="modern-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama Siswa</th>
+                                                    <th>NIS</th>
+                                                    <th>Kelas</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data akan diisi oleh JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Kelola Materi -->
+                <section id="kelola-materi" class="content-section">
+                    <div class="section-header">
+                        <h1 class="section-title">Kelola Materi Pembelajaran</h1>
+                        <p class="section-subtitle">Upload dan kelola materi PDF & PowerPoint</p>
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="form-container">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Upload Materi Baru</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form id="formTambahMateri" class="modern-form" enctype="multipart/form-data">
+                                        <div class="form-group">
+                                            <label for="judulMateri" class="form-label">
+                                                <i class="fas fa-heading"></i>
+                                                Judul Materi
+                                            </label>
+                                            <input type="text" id="judulMateri" class="form-input" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="jenisMateri" class="form-label">
+                                                <i class="fas fa-file"></i>
+                                                Jenis Materi
+                                            </label>
+                                            <select id="jenisMateri" class="form-select" required>
+                                                <option value="">Pilih Jenis</option>
+                                                <option value="pdf">PDF Document</option>
+                                                <option value="ppt">PowerPoint</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="fileMateri" class="form-label">
+                                                <i class="fas fa-upload"></i>
+                                                File Materi
+                                            </label>
+                                            <div class="file-upload">
+                                                <input type="file" id="fileMateri" class="file-input" accept=".pdf,.ppt,.pptx" required>
+                                                <div class="file-upload-label">
+                                                    <i class="fas fa-cloud-upload-alt"></i>
+                                                    <span>Pilih file atau drop di sini</span>
+                                                    <p>PDF, PPT (Max. 10MB)</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-upload"></i>
+                                            Upload Materi
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Daftar Materi</h3>
+                                    <div class="card-actions">
+                                        <div class="search-box">
+                                            <i class="fas fa-search"></i>
+                                            <input type="text" id="searchMateri" placeholder="Cari materi...">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="tabelMateri" class="modern-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Judul Materi</th>
+                                                    <th>Jenis</th>
+                                                    <th>Tanggal</th>
+                                                    <th>Ukuran</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data akan diisi oleh JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Kelola Pre-test -->
+                <section id="kelola-pretest" class="content-section">
+                    <div class="section-header">
+                        <h1 class="section-title">Kelola Pre-test</h1>
+                        <p class="section-subtitle">Kelola soal pre-test literasi keuangan</p>
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Status Pre-test</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="status-alert info">
+                                    <div class="alert-icon">
+                                        <i class="fas fa-info-circle"></i>
+                                    </div>
+                                    <div class="alert-content">
+                                        <h4>Pre-test Otomatis Tersedia</h4>
+                                        <p>4 soal pre-test telah tersedia dengan timer 45 detik per soal</p>
+                                    </div>
+                                </div>
+                                <div class="action-buttons">
+                                    <button id="aktifkanPretest" class="btn btn-success">
+                                        <i class="fas fa-play"></i>
+                                        Aktifkan Pre-test
+                                    </button>
+                                    <button id="nonaktifkanPretest" class="btn btn-outline">
+                                        <i class="fas fa-pause"></i>
+                                        Nonaktifkan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Tambah Soal Manual</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="formTambahSoalPretest" class="modern-form">
+                                    <div class="form-group">
+                                        <label for="soalPretest" class="form-label">Pertanyaan</label>
+                                        <textarea id="soalPretest" class="form-textarea" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Pilihan A</label>
+                                            <input type="text" class="form-input pilihan" placeholder="Pilihan A" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Pilihan B</label>
+                                            <input type="text" class="form-input pilihan" placeholder="Pilihan B" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Pilihan C</label>
+                                            <input type="text" class="form-input pilihan" placeholder="Pilihan C" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Pilihan D</label>
+                                            <input type="text" class="form-input pilihan" placeholder="Pilihan D" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="jawabanPretest" class="form-label">Jawaban Benar</label>
+                                            <select id="jawabanPretest" class="form-select" required>
+                                                <option value="a">Pilihan A</option>
+                                                <option value="b">Pilihan B</option>
+                                                <option value="c">Pilihan C</option>
+                                                <option value="d">Pilihan D</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="levelPretest" class="form-label">Level Kesulitan</label>
+                                            <select id="levelPretest" class="form-select" required>
+                                                <option value="easy">Easy</option>
+                                                <option value="medium">Medium</option>
+                                                <option value="hard">Hard</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i>
+                                        Tambah Soal
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="card full-width">
+                            <div class="card-header">
+                                <h3 class="card-title">Daftar Soal Pre-test</h3>
+                                <div class="card-actions">
+                                    <span class="badge badge-primary" id="totalSoalPretest">4 Soal</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="listSoalPretest" class="soal-container">
+                                    <!-- Soal akan diisi oleh JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Kelola Kuis -->
+                <section id="kelola-kuis" class="content-section">
+                    <div class="section-header">
+                        <h1 class="section-title">Kelola Kuis</h1>
+                        <p class="section-subtitle">Kelola soal kuis literasi keuangan</p>
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Status Kuis</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="status-alert info">
+                                    <div class="alert-icon">
+                                        <i class="fas fa-info-circle"></i>
+                                    </div>
+                                    <div class="alert-content">
+                                        <h4>Kuis Lengkap Tersedia</h4>
+                                        <p>20 soal kuis telah tersedia dengan timer 15 menit total</p>
+                                    </div>
+                                </div>
+                                <div class="action-buttons">
+                                    <button id="aktifkanKuis" class="btn btn-success">
+                                        <i class="fas fa-play"></i>
+                                        Aktifkan Kuis
+                                    </button>
+                                    <button id="nonaktifkanKuis" class="btn btn-outline">
+                                        <i class="fas fa-pause"></i>
+                                        Nonaktifkan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Tambah Soal Kuis</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="formTambahSoalKuis" class="modern-form">
+                                    <div class="form-group">
+                                        <label for="soalKuis" class="form-label">Pertanyaan</label>
+                                        <textarea id="soalKuis" class="form-textarea" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Pilihan A</label>
+                                            <input type="text" class="form-input pilihan-kuis" placeholder="Pilihan A" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Pilihan B</label>
+                                            <input type="text" class="form-input pilihan-kuis" placeholder="Pilihan B" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Pilihan C</label>
+                                            <input type="text" class="form-input pilihan-kuis" placeholder="Pilihan C" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Pilihan D</label>
+                                            <input type="text" class="form-input pilihan-kuis" placeholder="Pilihan D" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="jawabanKuis" class="form-label">Jawaban Benar</label>
+                                            <select id="jawabanKuis" class="form-select" required>
+                                                <option value="a">Pilihan A</option>
+                                                <option value="b">Pilihan B</option>
+                                                <option value="c">Pilihan C</option>
+                                                <option value="d">Pilihan D</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="levelKuis" class="form-label">Level Kesulitan</label>
+                                            <select id="levelKuis" class="form-select" required>
+                                                <option value="easy">Easy</option>
+                                                <option value="medium">Medium</option>
+                                                <option value="hard">Hard</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i>
+                                        Tambah Soal
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="card full-width">
+                            <div class="card-header">
+                                <h3 class="card-title">Daftar Soal Kuis</h3>
+                                <div class="card-actions">
+                                    <span class="badge badge-primary" id="totalSoalKuis">20 Soal</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="listSoalKuis" class="soal-container">
+                                    <!-- Soal kuis akan diisi oleh JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Hasil Siswa -->
+                <section id="hasil-siswa" class="content-section">
+                    <div class="section-header">
+                        <h1 class="section-title">Hasil & Nilai Siswa</h1>
+                        <p class="section-subtitle">Monitor perkembangan dan hasil evaluasi siswa</p>
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="card full-width">
+                            <div class="card-header">
+                                <h3 class="card-title">Data Hasil Siswa</h3>
+                                <div class="card-actions">
+                                    <div class="filter-group">
+                                        <select id="filterKelas" class="form-select-sm">
+                                            <option value="all">Semua Kelas</option>
+                                        </select>
+                                        <select id="filterJenis" class="form-select-sm">
+                                            <option value="all">Semua Jenis</option>
+                                            <option value="pretest">Pre-test</option>
+                                            <option value="kuis">Kuis</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="tabelHasil" class="modern-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama Siswa</th>
+                                                <th>Kelas</th>
+                                                <th>Jenis Tes</th>
+                                                <th>Nilai</th>
+                                                <th>Status</th>
+                                                <th>Tanggal</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Data akan diisi oleh JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Components -->
+    <div id="modalEditSiswa" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Data Siswa</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditSiswa" class="modern-form">
+                    <input type="hidden" id="editSiswaId">
+                    <div class="form-group">
+                        <label for="editNamaSiswa" class="form-label">Nama Siswa</label>
+                        <input type="text" id="editNamaSiswa" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editNisSiswa" class="form-label">NIS</label>
+                        <input type="text" id="editNisSiswa" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editKelasSiswa" class="form-label">Kelas</label>
+                        <select id="editKelasSiswa" class="form-select" required>
+                            <option value="X IPA 1">X IPA 1</option>
+                            <option value="X IPA 2">X IPA 2</option>
+                            <option value="X IPS 1">X IPS 1</option>
+                            <option value="X IPS 2">X IPS 2</option>
+                            <option value="XI IPA 1">XI IPA 1</option>
+                            <option value="XI IPA 2">XI IPA 2</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="btnBatalEditSiswa">Batal</button>
+                <button type="submit" form="formEditSiswa" class="btn btn-primary">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== SUPER PRO GURU DASHBOARD JS =====
+
+        // Data Management
+        class DataManager {
+            constructor() {
+                this.storageKeys = {
+                    SISWA: 'siswa',
+                    MATERI: 'guru_materials',
+                    PRETEST_SOAL: 'guru_pretest',
+                    KUIS_SOAL: 'guru_kuis',
+                    HASIL_SISWA: 'hasilSiswa',
+                    PRETEST_AKTIF: 'pretestAktif',
+                    KUIS_AKTIF: 'kuisAktif'
+                };
+                
+                this.initData();
+            }
+            
+            initData() {
+                // Initialize default data if not exists
+                if (!localStorage.getItem(this.storageKeys.SISWA)) {
+                    localStorage.setItem(this.storageKeys.SISWA, JSON.stringify([]));
+                }
+                
+                if (!localStorage.getItem(this.storageKeys.MATERI)) {
+                    localStorage.setItem(this.storageKeys.MATERI, JSON.stringify([]));
+                }
+                
+                if (!localStorage.getItem(this.storageKeys.PRETEST_SOAL)) {
+                    localStorage.setItem(this.storageKeys.PRETEST_SOAL, JSON.stringify(this.getDefaultPretestSoal()));
+                }
+                
+                if (!localStorage.getItem(this.storageKeys.KUIS_SOAL)) {
+                    localStorage.setItem(this.storageKeys.KUIS_SOAL, JSON.stringify(this.getDefaultKuisSoal()));
+                }
+                
+                if (!localStorage.getItem(this.storageKeys.HASIL_SISWA)) {
+                    localStorage.setItem(this.storageKeys.HASIL_SISWA, JSON.stringify([]));
+                }
+                
+                // Initialize status aktif
+                if (!localStorage.getItem(this.storageKeys.PRETEST_AKTIF)) {
+                    localStorage.setItem(this.storageKeys.PRETEST_AKTIF, 'true');
+                }
+                
+                if (!localStorage.getItem(this.storageKeys.KUIS_AKTIF)) {
+                    localStorage.setItem(this.storageKeys.KUIS_AKTIF, 'true');
+                }
+            }
+            
+            getDefaultPretestSoal() {
+                return [
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Apa yang dimaksud dengan literasi keuangan?",
+                        pilihan: {
+                            a: "Kemampuan membaca laporan keuangan",
+                            b: "Pengetahuan dan keterampilan dalam mengelola keuangan",
+                            c: "Kemampuan menghitung bunga bank",
+                            d: "Pengetahuan tentang saham dan obligasi"
+                        },
+                        jawaban: "b",
+                        level: "easy"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Apa manfaat dari membuat anggaran keuangan?",
+                        pilihan: {
+                            a: "Membatasi kebebasan dalam berbelanja",
+                            b: "Membantu mengontrol pengeluaran dan mencapai tujuan keuangan",
+                            c: "Membuat hidup menjadi lebih rumit",
+                            d: "Hanya diperlukan untuk orang yang berpenghasilan tinggi"
+                        },
+                        jawaban: "b",
+                        level: "easy"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Apa perbedaan antara kebutuhan dan keinginan?",
+                        pilihan: {
+                            a: "Kebutuhan adalah hal yang harus dipenuhi, keinginan adalah hal yang diharapkan",
+                            b: "Kebutuhan dan keinginan adalah sama",
+                            c: "Kebutuhan bersifat psikologis, keinginan bersifat fisik",
+                            d: "Kebutuhan untuk masa depan, keinginan untuk saat ini"
+                        },
+                        jawaban: "a",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Apa yang dimaksud dengan investasi?",
+                        pilihan: {
+                            a: "Menabung uang di bank",
+                            b: "Menggunakan uang untuk menghasilkan lebih banyak uang di masa depan",
+                            c: "Membeli barang mewah",
+                            d: "Meminjam uang untuk bisnis"
+                        },
+                        jawaban: "b",
+                        level: "medium"
+                    }
+                ];
+            }
+            
+            getDefaultKuisSoal() {
+                return [
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Apa yang dimaksud anggaran dana?",
+                        pilihan: {
+                            a: "Rencana pengeluaran dan pemasukan dalam periode tertentu",
+                            b: "Saldo uang yang dimiliki saat ini",
+                            c: "Total aset yang dimiliki",
+                            d: "Pencatatan investasi"
+                        },
+                        jawaban: "a",
+                        level: "easy"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Sebutkan beberapa jenis investasi yang kamu ketahui!",
+                        pilihan: {
+                            a: "Reksa dana, kas, uang kripto",
+                            b: "menabung di bawah kasur, judi",
+                            c: "Reksa dana, saham, obligasi, deposito",
+                            d: "Properti, emas, arisan"
+                        },
+                        jawaban: "c",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Apa perbedaan kartu debit dan kredit?",
+                        pilihan: {
+                            a: "Kartu debit memiliki limit yang ditentukan oleh bank",
+                            b: "Kartu debit memiliki bunga jika terlambat dibayarkan",
+                            c: "Kartu debit mengurangi saldo rekening",
+                            d: "Kartu kredit mengurangi saldo rekening"
+                        },
+                        jawaban: "c",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Apa manfaat memiliki asuransi dalam kehidupan sehari-hari?",
+                        pilihan: {
+                            a: "Membuat hidup terasa lebih tenang",
+                            b: "Menambah jumlah tabungan di bank",
+                            c: "Mendapat hadiah undian setiap bulan",
+                            d: "Perlindungan financial dari risiko"
+                        },
+                        jawaban: "d",
+                        level: "easy"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Mengapa penting untuk menjaga kerahasiaan informasi pribadi dan keuangan?",
+                        pilihan: {
+                            a: "Mencegah pencurian identitas dan kerugian finansial",
+                            b: "Agar terlihat misterius dan eksklusif",
+                            c: "Agar tidak ketinggalan tren",
+                            d: "Membatasi kebebasan"
+                        },
+                        jawaban: "a",
+                        level: "easy"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Apa saja langkah yang bisa dilakukan untuk mencegah pencurian identitas?",
+                        pilihan: {
+                            a: "Dimasukkan ke brankas",
+                            b: "Menyimpan di bawah kasur",
+                            c: "Menyimpan informasi penting di tempat tidak aman",
+                            d: "Memeriksa laporan bank secara berkala dan tidak membagikan informasi pribadi"
+                        },
+                        jawaban: "d",
+                        level: "easy"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Apa saja yang perlu diperhatikan sebelum melakukan investasi?",
+                        pilihan: {
+                            a: "Memilih investasi yang untung besar tanpa riset",
+                            b: "Memahami profil risiko, tujuan investasi, dan kondisi keuangan pribadi",
+                            c: "Mengikuti tren investasi yang populer",
+                            d: "Meneliti lembaga investasi kemudian meminjam uang untuk berinvestasi"
+                        },
+                        jawaban: "b",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Andi ingin laptop Rp8.000.000. Ia bisa menabung Rp500.000/bulan atau kredit Rp400.000 selama 24 bulan. Mana paling bijak?",
+                        pilihan: {
+                            a: "Mengambil kredit agar cepat punya laptop",
+                            b: "Menabung hingga uangnya cukup meskipun lebih lama",
+                            c: "Mengambil kredit karena cicilannya lebih rendah",
+                            d: "Menabung sebagian dan sisanya kredit"
+                        },
+                        jawaban: "b",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Keluarga Pak Joko ingin membeli rumah 5 tahun lagi. Pendapatan 8 juta, pengeluaran 5 juta. Strategi terbaik adalah...",
+                        pilihan: {
+                            a: "Menabung sisa pendapatan tanpa target",
+                            b: "Menabung 50% dari sisa pendapatan untuk investasi berisiko tinggi",
+                            c: "Menabung jumlah tetap dan memilih investasi risiko rendah–sedang",
+                            d: "Menunda pembelian rumah"
+                        },
+                        jawaban: "c",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Keluarga Pak Surya ingin liburan dengan anggaran 5 juta. Strategi paling tepat adalah...",
+                        pilihan: {
+                            a: "Menghabiskan anggaran di hari pertama",
+                            b: "Membuat rencana harian dan mencari promo",
+                            c: "Membeli oleh-oleh sebanyak mungkin",
+                            d: "Tidak jadi liburan"
+                        },
+                        jawaban: "b",
+                        level: "easy"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Apa yang harus dilakukan jika menerima pesan mencurigakan meminta data pribadi?",
+                        pilihan: {
+                            a: "Membalas pesan tersebut",
+                            b: "Mengakses tautan",
+                            c: "Mengabaikan dan melaporkannya",
+                            d: "Membagikan ke teman"
+                        },
+                        jawaban: "c",
+                        level: "easy"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Apa manfaat dan risiko layanan pay later?",
+                        pilihan: {
+                            a: "Memudahkan transaksi, tapi ada risiko bunga tinggi dan hutang menumpuk",
+                            b: "Selalu mendapat diskon besar",
+                            c: "Meningkatkan skor kredit drastis",
+                            d: "Bisa belanja bebas tanpa batas"
+                        },
+                        jawaban: "a",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Bagaimana cara melindungi diri dari phishing?",
+                        pilihan: {
+                            a: "Mengakses semua link yang dikirim",
+                            b: "Menggunakan kata sandi sama untuk semua akun",
+                            c: "Memberikan data pribadi kepada teman dekat",
+                            d: "Memeriksa keaslian situs dan tidak memberi data sensitif"
+                        },
+                        jawaban: "d",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Bagaimana memastikan keamanan aplikasi keuangan digital?",
+                        pilihan: {
+                            a: "Menggunakan kata sandi yang mudah",
+                            b: "Tidak mengaktifkan verifikasi dua langkah",
+                            c: "Memperbarui aplikasi dan memakai kata sandi unik",
+                            d: "Membagikan PIN ke teman dekat"
+                        },
+                        jawaban: "c",
+                        level: "easy"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Bagaimana membuat anggaran digital yang efektif?",
+                        pilihan: {
+                            a: "Mencatat manual tanpa analisis",
+                            b: "Menggunakan aplikasi, menetapkan kategori, dan memantau berkala",
+                            c: "Menggunakan aplikasi tanpa memahami fitur",
+                            d: "Memperkirakan pengeluaran tanpa mencatat"
+                        },
+                        jawaban: "b",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Bagaimana mengelola keuangan digital saat darurat?",
+                        pilihan: {
+                            a: "Menarik semua dana",
+                            b: "Menggunakan semua kartu kredit",
+                            c: "Mengabaikan tagihan",
+                            d: "Mengutamakan kebutuhan prioritas dan memakai dana darurat"
+                        },
+                        jawaban: "d",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Bagaimana menyelesaikan kasus kebocoran data pribadi?",
+                        pilihan: {
+                            a: "Mengabaikan pemberitahuan",
+                            b: "Menghapus semua bukti",
+                            c: "Menyimpan bukti, mempelajari aturan, dan lapor pihak berwenang",
+                            d: "Menyebarkan kasus di media sosial"
+                        },
+                        jawaban: "c",
+                        level: "hard"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Pak Budi ingin membeli polis asuransi online harga murah. Apa langkah paling tepat?",
+                        pilihan: {
+                            a: "Langsung membeli karena murah",
+                            b: "Membandingkan harga dan fitur di situs resmi",
+                            c: "Meminta saran teman",
+                            d: "Mengabaikan karena takut penipuan"
+                        },
+                        jawaban: "b",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Diana ingin beli elektronik dengan paylater 0%, tetapi ada biaya admin 2%/bulan. Apa keputusan paling tepat?",
+                        pilihan: {
+                            a: "Tetap lanjut karena cicilan 0% tanpa biaya",
+                            b: "Evaluasi ulang karena biaya admin menambah total pengeluaran",
+                            c: "Tidak perlu khawatir, biaya admin hanya saat telat bayar",
+                            d: "Segera ambil promo karena menguntungkan"
+                        },
+                        jawaban: "b",
+                        level: "medium"
+                    },
+                    {
+                        id: this.generateId(),
+                        pertanyaan: "Budi butuh uang dan menemukan pinjol tanpa verifikasi, tapi ulasan menunjukkan bunga tinggi dan penagihan kasar. Apa yang harus dilakukan?",
+                        pilihan: {
+                            a: "Tetap mengajukan pinjaman",
+                            b: "Menghubungi penyedia untuk konfirmasi",
+                            c: "Mencari lembaga resmi yang diawasi OJK",
+                            d: "Meminjam sedikit saja"
+                        },
+                        jawaban: "c",
+                        level: "hard"
+                    }
+                ];
+            }
+            
+            generateId() {
+                return Date.now() + Math.random().toString(36).substr(2, 9);
+            }
+            
+            // CRUD Operations
+            getData(key) {
+                return JSON.parse(localStorage.getItem(key)) || [];
+            }
+            
+            setData(key, data) {
+                localStorage.setItem(key, JSON.stringify(data));
+            }
+            
+            addItem(key, item) {
+                const data = this.getData(key);
+                data.push({ ...item, id: this.generateId() });
+                this.setData(key, data);
+                return item;
+            }
+            
+            updateItem(key, id, updates) {
+                const data = this.getData(key);
+                const index = data.findIndex(item => item.id === id);
+                if (index !== -1) {
+                    data[index] = { ...data[index], ...updates };
+                    this.setData(key, data);
+                    return data[index];
+                }
+                return null;
+            }
+            
+            deleteItem(key, id) {
+                const data = this.getData(key);
+                const filteredData = data.filter(item => item.id !== id);
+                this.setData(key, filteredData);
+                return filteredData;
+            }
+        }
+
+        // UI Manager
+        class UIManager {
+            constructor() {
+                this.dataManager = new DataManager();
+                this.currentTheme = localStorage.getItem('theme') || 'light';
+                this.init();
+            }
+            
+            init() {
+                this.applyTheme(this.currentTheme);
+                this.bindEvents();
+                this.loadDashboard();
+            }
+            
+            applyTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                
+                const themeIcon = document.querySelector('#themeToggle i');
+                if (themeIcon) {
+                    themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            bindEvents() {
+                // Theme Toggle
+                document.getElementById('themeToggle')?.addEventListener('click', () => {
+                    this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+                    this.applyTheme(this.currentTheme);
+                });
+                
+                // Sidebar Toggle
+                document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+                    document.querySelector('.sidebar').classList.toggle('active');
+                    document.querySelector('.main-content').classList.toggle('sidebar-open');
+                });
+                
+                document.getElementById('sidebarClose')?.addEventListener('click', () => {
+                    document.querySelector('.sidebar').classList.remove('active');
+                    document.querySelector('.main-content').classList.remove('sidebar-open');
+                });
+                
+                // User Dropdown
+                document.getElementById('userDropdown')?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    document.getElementById('dropdownMenu').classList.toggle('show');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', () => {
+                    document.getElementById('dropdownMenu')?.classList.remove('show');
+                });
+                
+                // Navigation
+                this.bindNavigation();
+                
+                // Forms
+                this.bindForms();
+                
+                // Modal
+                this.bindModals();
+                
+                // Quick Actions
+                this.bindQuickActions();
+            }
+            
+            bindNavigation() {
+                const navLinks = document.querySelectorAll('.menu-item');
+                const contentSections = document.querySelectorAll('.content-section');
+                
+                navLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const target = link.getAttribute('data-target');
+                        
+                        if (!target) return;
+                        
+                        // Update active states
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        contentSections.forEach(s => s.classList.remove('active'));
+                        
+                        link.classList.add('active');
+                        document.getElementById(target).classList.add('active');
+                        
+                        // Update breadcrumb
+                        this.updateBreadcrumb(link.querySelector('span').textContent);
+                        
+                        // Load section data
+                        this.loadSectionData(target);
+                        
+                        // Close sidebar on mobile
+                        if (window.innerWidth <= 768) {
+                            document.querySelector('.sidebar').classList.remove('active');
+                            document.querySelector('.main-content').classList.remove('sidebar-open');
+                        }
+                    });
+                });
+                
+                // Buka Halaman Siswa
+                document.getElementById('bukaHalamanSiswa')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.bukaHalamanSiswa();
+                });
+                
+                document.getElementById('bukaModeSiswa')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.bukaHalamanSiswa();
+                });
+            }
+            
+            updateBreadcrumb(sectionName) {
+                const currentPage = document.querySelector('.breadcrumb .current-page');
+                if (currentPage) {
+                    currentPage.textContent = sectionName;
+                }
+            }
+            
+            bindForms() {
+                // Tambah Siswa Form
+                document.getElementById('formTambahSiswa')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleTambahSiswa();
+                });
+                
+                // Edit Siswa Form
+                document.getElementById('formEditSiswa')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleEditSiswa();
+                });
+                
+                // Tambah Materi Form
+                document.getElementById('formTambahMateri')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleTambahMateri();
+                });
+                
+                // Pre-test Controls
+                document.getElementById('aktifkanPretest')?.addEventListener('click', () => {
+                    this.togglePretest(true);
+                });
+                
+                document.getElementById('nonaktifkanPretest')?.addEventListener('click', () => {
+                    this.togglePretest(false);
+                });
+                
+                // Kuis Controls
+                document.getElementById('aktifkanKuis')?.addEventListener('click', () => {
+                    this.toggleKuis(true);
+                });
+                
+                document.getElementById('nonaktifkanKuis')?.addEventListener('click', () => {
+                    this.toggleKuis(false);
+                });
+                
+                // Tambah Soal Pre-test Form
+                document.getElementById('formTambahSoalPretest')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleTambahSoalPretest();
+                });
+                
+                // Tambah Soal Kuis Form
+                document.getElementById('formTambahSoalKuis')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleTambahSoalKuis();
+                });
+                
+                // Filter Hasil Siswa
+                document.getElementById('filterKelas')?.addEventListener('change', () => {
+                    this.loadHasilSiswa();
+                });
+                
+                document.getElementById('filterJenis')?.addEventListener('change', () => {
+                    this.loadHasilSiswa();
+                });
+                
+                // Search Materi
+                document.getElementById('searchMateri')?.addEventListener('input', () => {
+                    this.filterMateri();
+                });
+            }
+            
+            bindModals() {
+                // Close modals
+                document.querySelectorAll('.modal-close').forEach(closeBtn => {
+                    closeBtn.addEventListener('click', (e) => {
+                        const modal = e.target.closest('.modal');
+                        this.closeModal(modal.id);
+                    });
+                });
+                
+                // Close modal on outside click
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            this.closeModal(modal.id);
+                        }
+                    });
+                });
+                
+                // Batal Edit Siswa
+                document.getElementById('btnBatalEditSiswa')?.addEventListener('click', () => {
+                    this.closeModal('modalEditSiswa');
+                });
+            }
+            
+            bindQuickActions() {
+                document.getElementById('btnTambahSiswa')?.addEventListener('click', () => {
+                    this.navigateToSection('tambah-siswa');
+                });
+                
+                document.getElementById('btnUploadMateri')?.addEventListener('click', () => {
+                    this.navigateToSection('kelola-materi');
+                });
+                
+                document.getElementById('btnKelolaPretest')?.addEventListener('click', () => {
+                    this.navigateToSection('kelola-pretest');
+                });
+                
+                document.getElementById('btnExportSiswa')?.addEventListener('click', () => {
+                    this.exportDataSiswa();
+                });
+            }
+            
+            navigateToSection(sectionId) {
+                const navLinks = document.querySelectorAll('.menu-item');
+                const contentSections = document.querySelectorAll('.content-section');
+                
+                // Update active states
+                navLinks.forEach(l => l.classList.remove('active'));
+                contentSections.forEach(s => s.classList.remove('active'));
+                
+                // Activate target section
+                document.querySelector(`[data-target="${sectionId}"]`).classList.add('active');
+                document.getElementById(sectionId).classList.add('active');
+                
+                // Update breadcrumb
+                this.updateBreadcrumb(document.querySelector(`[data-target="${sectionId}"] span`).textContent);
+                
+                // Load section data
+                this.loadSectionData(sectionId);
+            }
+            
+            openModal(modalId) {
+                document.getElementById(modalId).style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+            
+            closeModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            
+            bukaHalamanSiswa() {
+                this.showNotification('Membuka halaman siswa di tab baru', 'info');
+                window.open('siswa.html', '_blank');
+            }
+            
+            // Data Handling Methods
+            async handleTambahSiswa() {
+                const namaSiswa = document.getElementById('namaSiswa').value;
+                const nisSiswa = document.getElementById('nisSiswa').value;
+                const kelasSiswa = document.getElementById('kelasSiswa').value;
+                
+                const siswaData = {
+                    nama: namaSiswa,
+                    nis: nisSiswa,
+                    kelas: kelasSiswa,
+                    status: 'Aktif',
+                    tanggalDaftar: new Date().toLocaleDateString('id-ID')
+                };
+                
+                try {
+                    this.dataManager.addItem(this.dataManager.storageKeys.SISWA, siswaData);
+                    this.showNotification('Siswa berhasil ditambahkan!', 'success');
+                    document.getElementById('formTambahSiswa').reset();
+                    this.loadDaftarSiswa();
+                    this.loadDashboard();
+                } catch (error) {
+                    this.showNotification('Gagal menambahkan siswa', 'error');
+                }
+            }
+            
+            async handleEditSiswa() {
+                const form = document.getElementById('formEditSiswa');
+                const id = document.getElementById('editSiswaId').value;
+                
+                const updates = {
+                    nama: document.getElementById('editNamaSiswa').value,
+                    nis: document.getElementById('editNisSiswa').value,
+                    kelas: document.getElementById('editKelasSiswa').value
+                };
+                
+                try {
+                    this.dataManager.updateItem(this.dataManager.storageKeys.SISWA, id, updates);
+                    this.showNotification('Data siswa berhasil diperbarui!', 'success');
+                    this.closeModal('modalEditSiswa');
+                    this.loadDaftarSiswa();
+                } catch (error) {
+                    this.showNotification('Gagal memperbarui data siswa', 'error');
+                }
+            }
+            
+            async handleTambahMateri() {
+                const form = document.getElementById('formTambahMateri');
+                const fileInput = document.getElementById('fileMateri');
+                const file = fileInput.files[0];
+
+                if (!file) {
+                    this.showNotification('Pilih file terlebih dahulu', 'warning');
+                    return;
+                }
+
+                // Validasi sederhana
+                const allowedExt = ['pdf', 'ppt', 'pptx'];
+                const ext = (file.name.split('.').pop() || '').toLowerCase();
+                const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+                if (file.size > MAX_SIZE) {
+                    this.showNotification('File terlalu besar. Maksimum 10MB.', 'warning');
+                    return;
+                }
+                if (!allowedExt.includes(ext)) {
+                    this.showNotification('Tipe file tidak didukung. Gunakan PDF atau PPT/PPTX.', 'warning');
+                    return;
+                }
+
+                // Siapkan FormData untuk dikirim ke server PHP (XAMPP)
+                const fd = new FormData();
+                fd.append('file', file);
+                fd.append('judul', document.getElementById('judulMateri').value);
+                fd.append('jenis', document.getElementById('jenisMateri').value);
+                fd.append('ukuran', this.formatFileSize(file.size));
+                fd.append('tanggal', new Date().toLocaleDateString('id-ID'));
+
+                // Kirim menggunakan XMLHttpRequest untuk bisa memantau progress upload
+                try {
+                    this.showNotification('Mengirim file ke server...', 'info');
+                    const uploadResp = await new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('POST', 'upload_materi.php', true);
+
+                        xhr.upload.onprogress = (e) => {
+                            if (e.lengthComputable) {
+                                const pct = Math.round((e.loaded / e.total) * 100);
+                                // optional: update UI jika ada progress bar
+                                console.debug('Upload progress:', pct + '%');
+                            }
+                        };
+
+                        xhr.onload = () => {
+                            if (xhr.status >= 200 && xhr.status < 300) {
+                                try {
+                                    const resp = JSON.parse(xhr.responseText || '{}');
+                                    if (resp.success) return resolve(resp);
+                                    return reject(resp.message || 'Upload gagal');
+                                } catch (err) {
+                                    return reject('Response tidak valid');
+                                }
+                            } else {
+                                return reject('Upload gagal dengan status ' + xhr.status);
+                            }
+                        };
+
+                        xhr.onerror = () => reject('Gagal menghubungi server');
+                        xhr.send(fd);
+                    });
+
+                    // Tampilkan pesan server bila tersedia
+                    if (uploadResp && uploadResp.message) {
+                        this.showNotification('Materi berhasil diupload: ' + uploadResp.message, 'success');
+                    } else {
+                        this.showNotification('Materi berhasil diupload ke server!', 'success');
+                    }
+                    form.reset();
+                    // Muat ulang daftar materi (server akan digunakan jika tersedia)
+                    this.loadDaftarMateri();
+                    this.loadDashboard();
+                } catch (err) {
+                    console.error('Upload ke server gagal:', err);
+                    this.showNotification('Upload ke server gagal, menyimpan lokal sebagai fallback', 'warning');
+
+                    // Fallback: simpan lokal (seperti sebelumnya)
+                    try {
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            const materiData = {
+                                judul: document.getElementById('judulMateri').value,
+                                jenis: document.getElementById('jenisMateri').value,
+                                namaFile: file.name,
+                                ukuran: this.formatFileSize(file.size),
+                                tanggal: new Date().toLocaleDateString('id-ID'),
+                                data: reader.result
+                            };
+                            this.dataManager.addItem(this.dataManager.storageKeys.MATERI, materiData);
+                            form.reset();
+                            this.loadDaftarMateri();
+                            this.loadDashboard();
+                        };
+                        reader.onerror = () => {
+                            this.showNotification('Gagal membaca file untuk fallback', 'error');
+                        };
+                        reader.readAsDataURL(file);
+                    } catch (readErr) {
+                        console.error('Fallback failed:', readErr);
+                    }
+                }
+            }
+            
+            async handleTambahSoalPretest() {
+                const form = document.getElementById('formTambahSoalPretest');
+                const inputs = form.querySelectorAll('.pilihan');
+                
+                const soalData = {
+                    pertanyaan: document.getElementById('soalPretest').value,
+                    pilihan: {
+                        a: inputs[0].value,
+                        b: inputs[1].value,
+                        c: inputs[2].value,
+                        d: inputs[3].value
+                    },
+                    jawaban: document.getElementById('jawabanPretest').value,
+                    level: document.getElementById('levelPretest').value
+                };
+                
+                try {
+                    this.dataManager.addItem(this.dataManager.storageKeys.PRETEST_SOAL, soalData);
+                    this.showNotification('Soal pre-test berhasil ditambahkan!', 'success');
+                    form.reset();
+                    this.loadDaftarSoalPretest();
+                } catch (error) {
+                    this.showNotification('Gagal menambahkan soal', 'error');
+                }
+            }
+            
+            async handleTambahSoalKuis() {
+                const form = document.getElementById('formTambahSoalKuis');
+                const inputs = form.querySelectorAll('.pilihan-kuis');
+                
+                const soalData = {
+                    pertanyaan: document.getElementById('soalKuis').value,
+                    pilihan: {
+                        a: inputs[0].value,
+                        b: inputs[1].value,
+                        c: inputs[2].value,
+                        d: inputs[3].value
+                    },
+                    jawaban: document.getElementById('jawabanKuis').value,
+                    level: document.getElementById('levelKuis').value
+                };
+                
+                try {
+                    this.dataManager.addItem(this.dataManager.storageKeys.KUIS_SOAL, soalData);
+                    this.showNotification('Soal kuis berhasil ditambahkan!', 'success');
+                    form.reset();
+                    this.loadDaftarSoalKuis();
+                } catch (error) {
+                    this.showNotification('Gagal menambahkan soal', 'error');
+                }
+            }
+            
+            togglePretest(aktif) {
+                localStorage.setItem(this.dataManager.storageKeys.PRETEST_AKTIF, aktif.toString());
+                this.showNotification(
+                    `Pre-test ${aktif ? 'diaktifkan' : 'dinonaktifkan'} untuk siswa`,
+                    'success'
+                );
+                this.loadDashboard();
+            }
+            
+            toggleKuis(aktif) {
+                localStorage.setItem(this.dataManager.storageKeys.KUIS_AKTIF, aktif.toString());
+                this.showNotification(
+                    `Kuis ${aktif ? 'diaktifkan' : 'dinonaktifkan'} untuk siswa`,
+                    'success'
+                );
+                this.loadDashboard();
+            }
+            
+            exportDataSiswa() {
+                this.showNotification('Fitur export data siswa akan segera tersedia', 'info');
+            }
+            
+            // Load Methods
+            loadDashboard() {
+                const siswa = this.dataManager.getData(this.dataManager.storageKeys.SISWA);
+                const materi = this.dataManager.getData(this.dataManager.storageKeys.MATERI);
+                const pretestAktif = localStorage.getItem(this.dataManager.storageKeys.PRETEST_AKTIF) === 'true';
+                const kuisAktif = localStorage.getItem(this.dataManager.storageKeys.KUIS_AKTIF) === 'true';
+                
+                document.getElementById('totalSiswa').textContent = siswa.length;
+                document.getElementById('totalMateri').textContent = materi.length;
+                document.getElementById('pretestAktif').textContent = pretestAktif ? 'Aktif' : 'Tidak';
+                document.getElementById('kuisAktif').textContent = kuisAktif ? 'Aktif' : 'Tidak';
+            }
+            
+            loadSectionData(section) {
+                switch (section) {
+                    case 'tambah-siswa':
+                        this.loadDaftarSiswa();
+                        break;
+                    case 'kelola-materi':
+                        this.loadDaftarMateri();
+                        break;
+                    case 'kelola-pretest':
+                        this.loadDaftarSoalPretest();
+                        break;
+                    case 'kelola-kuis':
+                        this.loadDaftarSoalKuis();
+                        break;
+                    case 'hasil-siswa':
+                        this.loadHasilSiswa();
+                        break;
+                }
+            }
+            
+            loadDaftarSiswa() {
+                const siswa = this.dataManager.getData(this.dataManager.storageKeys.SISWA);
+                const tbody = document.querySelector('#tabelSiswa tbody');
+                
+                tbody.innerHTML = siswa.map(siswa => `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-sm mr-3">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <div>
+                                    <div class="font-weight-600">${siswa.nama}</div>
+                                    <div class="text-muted small">${siswa.nis}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${siswa.nis}</td>
+                        <td>${siswa.kelas}</td>
+                        <td>
+                            <span class="badge badge-success">${siswa.status}</span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-outline" onclick="uiManager.editSiswa('${siswa.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline text-danger" onclick="uiManager.hapusSiswa('${siswa.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            async loadDaftarMateri() {
+                const tbody = document.querySelector('#tabelMateri tbody');
+
+                // Attempt to load server-side list first, fallback to localStorage
+                try {
+                    const resp = await fetch('list_materi.php', { cache: 'no-store' });
+                    if (resp.ok) {
+                        const json = await resp.json();
+                        if (json && json.success && Array.isArray(json.data)) {
+                            // Map server items to displayable rows
+                            const serverRows = json.data.map(item => {
+                                // Mark id with prefix so we can distinguish server vs local
+                                const rowId = 'srv-' + item.id;
+                                const jenis = (item.jenis || '').toLowerCase();
+                                return `
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm mr-3 ${jenis === 'pdf' ? 'bg-danger' : 'bg-warning'}">
+                                                    <i class="fas fa-file-${jenis === 'pdf' ? 'pdf' : 'powerpoint'}"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="font-weight-600">${item.judul}</div>
+                                                    <div class="text-muted small">${item.namaFile}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge ${jenis === 'pdf' ? 'badge-danger' : 'badge-warning'}">
+                                                ${jenis.toUpperCase()}
+                                            </span>
+                                        </td>
+                                        <td>${item.tanggal}</td>
+                                        <td>${item.ukuran}</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-sm btn-outline" onclick="uiManager.pratinjauMateri('${rowId}')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline text-danger" onclick="uiManager.hapusMateri('${rowId}')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('');
+
+                            // Also include any local-only items stored in localStorage
+                            const localMateri = this.dataManager.getData(this.dataManager.storageKeys.MATERI);
+                            const localRows = localMateri.map(item => {
+                                const jenis = (item.jenis || '').toLowerCase();
+                                return `
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm mr-3 ${jenis === 'pdf' ? 'bg-danger' : 'bg-warning'}">
+                                                    <i class="fas fa-file-${jenis === 'pdf' ? 'pdf' : 'powerpoint'}"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="font-weight-600">${item.judul}</div>
+                                                    <div class="text-muted small">${item.namaFile || ''}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge ${jenis === 'pdf' ? 'badge-danger' : 'badge-warning'}">
+                                                ${jenis.toUpperCase()}
+                                            </span>
+                                        </td>
+                                        <td>${item.tanggal}</td>
+                                        <td>${item.ukuran}</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-sm btn-outline" onclick="uiManager.pratinjauMateri('${item.id}')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline text-danger" onclick="uiManager.hapusMateri('${item.id}')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('');
+
+                            tbody.innerHTML = serverRows + localRows;
+                            return;
+                        }
+                    }
+                    // if response not ok, fall through to local fallback
+                } catch (err) {
+                    console.warn('Tidak dapat mengambil daftar dari server:', err);
+                }
+
+                // Fallback: render only local storage
+                const materi = this.dataManager.getData(this.dataManager.storageKeys.MATERI);
+                tbody.innerHTML = materi.map(item => `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-sm mr-3 ${item.jenis === 'pdf' ? 'bg-danger' : 'bg-warning'}">
+                                    <i class="fas fa-file-${item.jenis === 'pdf' ? 'pdf' : 'powerpoint'}"></i>
+                                </div>
+                                <div>
+                                    <div class="font-weight-600">${item.judul}</div>
+                                    <div class="text-muted small">${item.namaFile || ''}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge ${item.jenis === 'pdf' ? 'badge-danger' : 'badge-warning'}">
+                                ${item.jenis.toUpperCase()}
+                            </span>
+                        </td>
+                        <td>${item.tanggal}</td>
+                        <td>${item.ukuran}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-outline" onclick="uiManager.pratinjauMateri('${item.id}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline text-danger" onclick="uiManager.hapusMateri('${item.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            filterMateri() {
+                const searchTerm = document.getElementById('searchMateri').value.toLowerCase();
+                const rows = document.querySelectorAll('#tabelMateri tbody tr');
+                
+                rows.forEach(row => {
+                    const judul = row.querySelector('td:first-child .font-weight-600').textContent.toLowerCase();
+                    if (judul.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            
+            loadDaftarSoalPretest() {
+                const soal = this.dataManager.getData(this.dataManager.storageKeys.PRETEST_SOAL);
+                const container = document.getElementById('listSoalPretest');
+                
+                document.getElementById('totalSoalPretest').textContent = `${soal.length} Soal`;
+                
+                container.innerHTML = soal.map((item, index) => `
+                    <div class="soal-item">
+                        <div class="soal-pertanyaan">${index + 1}. ${item.pertanyaan}</div>
+                        ${Object.entries(item.pilihan).map(([key, value]) => `
+                            <div class="soal-pilihan">${key.toUpperCase()}. ${value}</div>
+                        `).join('')}
+                        <div class="soal-jawaban">
+                            <i class="fas fa-check-circle"></i>
+                            Jawaban: ${item.jawaban.toUpperCase()} | Level: ${item.level}
+                        </div>
+                        <div class="soal-actions">
+                            <button class="btn btn-sm btn-outline" onclick="uiManager.editSoalPretest('${item.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-outline text-danger" onclick="uiManager.hapusSoalPretest('${item.id}')">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            loadDaftarSoalKuis() {
+                const soal = this.dataManager.getData(this.dataManager.storageKeys.KUIS_SOAL);
+                const container = document.getElementById('listSoalKuis');
+                
+                document.getElementById('totalSoalKuis').textContent = `${soal.length} Soal`;
+                
+                container.innerHTML = soal.map((item, index) => `
+                    <div class="soal-item">
+                        <div class="soal-pertanyaan">${index + 1}. ${item.pertanyaan}</div>
+                        ${Object.entries(item.pilihan).map(([key, value]) => `
+                            <div class="soal-pilihan">${key.toUpperCase()}. ${value}</div>
+                        `).join('')}
+                        <div class="soal-jawaban">
+                            <i class="fas fa-check-circle"></i>
+                            Jawaban: ${item.jawaban.toUpperCase()} | Level: ${item.level}
+                        </div>
+                        <div class="soal-actions">
+                            <button class="btn btn-sm btn-outline" onclick="uiManager.editSoalKuis('${item.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-outline text-danger" onclick="uiManager.hapusSoalKuis('${item.id}')">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            loadHasilSiswa() {
+                const hasil = this.dataManager.getData(this.dataManager.storageKeys.HASIL_SISWA);
+                const siswa = this.dataManager.getData(this.dataManager.storageKeys.SISWA);
+                const tbody = document.querySelector('#tabelHasil tbody');
+                
+                // Update kelas filter
+                const kelasFilter = document.getElementById('filterKelas');
+                const kelasOptions = [...new Set(siswa.map(s => s.kelas))];
+                
+                kelasFilter.innerHTML = '<option value="all">Semua Kelas</option>' +
+                    kelasOptions.map(kelas => `<option value="${kelas}">${kelas}</option>`).join('');
+                
+                const filteredHasil = hasil.filter(h => {
+                    const siswaData = siswa.find(s => s.id === h.siswaId);
+                    const kelasMatch = kelasFilter.value === 'all' || siswaData?.kelas === kelasFilter.value;
+                    const jenisMatch = document.getElementById('filterJenis').value === 'all' || h.jenis === document.getElementById('filterJenis').value;
+                    return siswaData && kelasMatch && jenisMatch;
+                });
+                
+                tbody.innerHTML = filteredHasil.map(h => {
+                    const siswaData = siswa.find(s => s.id === h.siswaId);
+                    if (!siswaData) return '';
+                    
+                    const nilaiColor = h.nilai >= 80 ? 'success' : h.nilai >= 60 ? 'warning' : 'danger';
+                    const statusText = h.nilai >= 80 ? 'Luar Biasa' : h.nilai >= 60 ? 'Baik' : 'Perlu Perbaikan';
+                    
+                    return `
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-sm mr-3">
+                                        <i class="fas fa-user-graduate"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-weight-600">${siswaData.nama}</div>
+                                        <div class="text-muted small">${siswaData.nis}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${siswaData.kelas}</td>
+                            <td>
+                                <span class="badge ${h.jenis === 'pretest' ? 'badge-primary' : 'badge-info'}">
+                                    ${h.jenis === 'pretest' ? 'Pre-test' : 'Kuis'}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="font-weight-600 text-${nilaiColor}">${h.nilai}</div>
+                            </td>
+                            <td>
+                                <span class="badge badge-${nilaiColor}">${statusText}</span>
+                            </td>
+                            <td>${h.tanggal}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline" onclick="uiManager.lihatDetailHasil('${h.id}')">
+                                    <i class="fas fa-chart-bar"></i> Detail
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            // Action Methods
+            editSiswa(id) {
+                const siswa = this.dataManager.getData(this.dataManager.storageKeys.SISWA);
+                const siswaData = siswa.find(s => s.id === id);
+                
+                if (siswaData) {
+                    document.getElementById('editSiswaId').value = siswaData.id;
+                    document.getElementById('editNamaSiswa').value = siswaData.nama;
+                    document.getElementById('editNisSiswa').value = siswaData.nis;
+                    document.getElementById('editKelasSiswa').value = siswaData.kelas;
+                    this.openModal('modalEditSiswa');
+                }
+            }
+            
+            hapusSiswa(id) {
+                if (confirm('Apakah Anda yakin ingin menghapus siswa ini?')) {
+                    this.dataManager.deleteItem(this.dataManager.storageKeys.SISWA, id);
+                    this.showNotification('Siswa berhasil dihapus', 'success');
+                    this.loadDaftarSiswa();
+                    this.loadDashboard();
+                }
+            }
+            
+            pratinjauMateri(id) {
+                // If id is from server (prefix 'srv-'), open server preview endpoint
+                if (typeof id === 'string' && id.startsWith('srv-')) {
+                    const serverId = id.replace('srv-', '');
+                    window.open('view_materi.php?id=' + encodeURIComponent(serverId), '_blank');
+                    this.showNotification('Membuka pratinjau dari server', 'info');
+                    return;
+                }
+
+                // Otherwise try local storage data URL
+                const materi = this.dataManager.getData(this.dataManager.storageKeys.MATERI);
+                const materiData = materi.find(m => m.id === id);
+                
+                if (materiData && materiData.data) {
+                    window.open(materiData.data, '_blank');
+                    this.showNotification('Membuka pratinjau: ' + materiData.judul, 'info');
+                } else {
+                    this.showNotification('Tidak ada data pratinjau lokal untuk materi ini', 'warning');
+                }
+            }
+            
+            hapusMateri(id) {
+                if (confirm('Apakah Anda yakin ingin menghapus materi ini?')) {
+                    this.dataManager.deleteItem(this.dataManager.storageKeys.MATERI, id);
+                    this.showNotification('Materi berhasil dihapus', 'success');
+                    this.loadDaftarMateri();
+                    this.loadDashboard();
+                }
+            }
+            
+            editSoalPretest(id) {
+                this.showNotification('Fitur edit soal akan segera tersedia', 'info');
+            }
+            
+            hapusSoalPretest(id) {
+                if (confirm('Apakah Anda yakin ingin menghapus soal ini?')) {
+                    this.dataManager.deleteItem(this.dataManager.storageKeys.PRETEST_SOAL, id);
+                    this.showNotification('Soal berhasil dihapus', 'success');
+                    this.loadDaftarSoalPretest();
+                }
+            }
+            
+            editSoalKuis(id) {
+                this.showNotification('Fitur edit soal akan segera tersedia', 'info');
+            }
+            
+            hapusSoalKuis(id) {
+                if (confirm('Apakah Anda yakin ingin menghapus soal ini?')) {
+                    this.dataManager.deleteItem(this.dataManager.storageKeys.KUIS_SOAL, id);
+                    this.showNotification('Soal berhasil dihapus', 'success');
+                    this.loadDaftarSoalKuis();
+                }
+            }
+            
+            lihatDetailHasil(id) {
+                this.showNotification('Membuka detail hasil siswa', 'info');
+            }
+            
+            // Utility Methods
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            showNotification(message, type = 'info') {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        <i class="fas fa-${this.getNotificationIcon(type)}"></i>
+                        <span>${message}</span>
+                    </div>
+                    <button class="notification-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                // Add close functionality
+                notification.querySelector('.notification-close').addEventListener('click', () => {
+                    notification.remove();
+                });
+                
+                document.body.appendChild(notification);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 5000);
+            }
+            
+            getNotificationIcon(type) {
+                const icons = {
+                    success: 'check-circle',
+                    error: 'exclamation-circle',
+                    warning: 'exclamation-triangle',
+                    info: 'info-circle'
+                };
+                return icons[type] || 'info-circle';
+            }
+        }
+
+        // Initialize the application
+        const uiManager = new UIManager();
+
+        // Logout functionality
+        document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                uiManager.showNotification('Berhasil keluar', 'success');
+                setTimeout(() => {
+                    // Redirect to login page (ganti dengan URL login yang sesuai)
+                    window.location.href = 'login.html';
+                }, 1000);
+            }
+        });
+
+        // Add CSS for notification animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            .notification-close {
+                background: none;
+                border: none;
+                color: var(--text-muted);
+                cursor: pointer;
+                padding: var(--spacing-xs);
+                border-radius: var(--radius-sm);
+            }
+            
+            .notification-close:hover {
+                color: var(--text-primary);
+                background: var(--bg-tertiary);
+            }
+            
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--bg-primary);
+                border: 1px solid var(--border-color);
+                border-left: 4px solid var(--primary);
+                border-radius: var(--radius-md);
+                padding: var(--spacing-md) var(--spacing-lg);
+                box-shadow: var(--shadow-lg);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                gap: var(--spacing-md);
+                max-width: 400px;
+                animation: slideInRight 0.3s ease-out;
+                line-height: 1.4;
+            }
+            
+            .notification.notification-success {
+                border-left-color: var(--success);
+            }
+            
+            .notification.notification-error {
+                border-left-color: var(--danger);
+            }
+            
+            .notification.notification-warning {
+                border-left-color: var(--warning);
+            }
+            
+            .notification.notification-info {
+                border-left-color: var(--info);
+            }
+            
+            .notification-content {
+                display: flex;
+                align-items: center;
+                gap: var(--spacing-sm);
+                flex: 1;
+            }
+            
+            .notification i {
+                font-size: 1.2rem;
+            }
+            
+            .notification.notification-success i {
+                color: var(--success);
+            }
+            
+            .notification.notification-error i {
+                color: var(--danger);
+            }
+            
+            .notification.notification-warning i {
+                color: var(--warning);
+            }
+            
+            .notification.notification-info i {
+                color: var(--info);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

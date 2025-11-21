@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINLEARN - Platform Financial Literacy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Reset dan Variabel */
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --text: #2b2d42;
+            --text-light: #8d99ae;
+            --bg: #ffffff;
+            --bg-alt: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #e9ecef;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary: #4cc9f0;
+            --primary-dark: #3aa8d4;
+            --secondary: #b5179e;
+            --accent: #f72585;
+            --text: #f8f9fa;
+            --text-light: #adb5bd;
+            --bg: #121212;
+            --bg-alt: #1e1e1e;
+            --card-bg: #2d2d2d;
+            --border: #404040;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--bg);
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Logo Styles */
+        .logo-image {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+        
+        .loading-logo .logo-image {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .footer-logo .logo-image {
+            width: 25px;
+            height: 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .logo-image {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .loading-logo .logo-image {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .footer-logo .logo-image {
+                width: 20px;
+                height: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo-image {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .loading-logo .logo-image {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .loading-logo span {
+            margin-left: 10px;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* Floating Shapes */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 15s infinite linear;
+        }
+
+        .shape-1 {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 120px;
+            height: 120px;
+            background: var(--secondary);
+            top: 60%;
+            right: 5%;
+            animation-delay: -5s;
+        }
+
+        .shape-3 {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            bottom: 10%;
+            left: 10%;
+            animation-delay: -10s;
+        }
+
+        .shape-4 {
+            width: 100px;
+            height: 100px;
+            background: var(--primary);
+            top: 20%;
+            right: 15%;
+            animation-delay: -7s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+
+        /* Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .dark-mode header {
+            background: rgba(30, 30, 30, 0.9);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .logo span {
+            margin-left: 10px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: relative;
+        }
+
+        .theme-checkbox {
+            display: none;
+        }
+
+        .theme-label {
+            display: flex;
+            align-items: center;
+            width: 60px;
+            height: 30px;
+            background: var(--border);
+            border-radius: 50px;
+            padding: 5px;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .theme-label i {
+            font-size: 14px;
+            z-index: 1;
+            transition: var(--transition);
+        }
+
+        .theme-label .fa-sun {
+            color: #f39c12;
+            margin-right: auto;
+        }
+
+        .theme-label .fa-moon {
+            color: #f1c40f;
+            margin-left: auto;
+        }
+
+        .theme-ball {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: var(--bg);
+            border-radius: 50%;
+            left: 4px;
+            transition: var(--transition);
+        }
+
+        .theme-checkbox:checked + .theme-label {
+            background: var(--primary);
+        }
+
+        .theme-checkbox:checked + .theme-label .theme-ball {
+            transform: translateX(30px);
+        }
+
+        /* Login Buttons */
+        .nav-login {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-login {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .btn-login.admin {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        .btn-login.guru {
+            background: rgba(114, 9, 183, 0.1);
+            color: var(--secondary);
+        }
+
+        .btn-login.siswa {
+            background: rgba(247, 37, 133, 0.1);
+            color: var(--accent);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            min-height: 90vh;
+            padding: 80px 0;
+            gap: 50px;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .title-line {
+            display: block;
+        }
+
+        .highlight {
+            color: var(--primary);
+            position: relative;
+        }
+
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: rgba(67, 97, 238, 0.2);
+            z-index: -1;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-large {
+            padding: 15px 30px;
+            font-size: 18px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .hero-visual {
+            flex: 1;
+            position: relative;
+        }
+
+        .visual-container {
+            position: relative;
+            height: 500px;
+        }
+
+        .main-visual {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            height: 350px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .main-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .visual-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            opacity: 0.1;
+            z-index: -1;
+            border-radius: 20px;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            width: 180px;
+            transition: var(--transition);
+            animation: float-card 8s infinite ease-in-out;
+        }
+
+        .floating-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .floating-card i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .floating-card h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .floating-card p {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .card-1 {
+            top: 10%;
+            left: 0;
+            animation-delay: 0s;
+        }
+
+        .card-2 {
+            top: 20%;
+            right: 0;
+            animation-delay: -2s;
+        }
+
+        .card-3 {
+            bottom: 20%;
+            left: 10%;
+            animation-delay: -4s;
+        }
+
+        @keyframes float-card {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon i {
+            font-size: 30px;
+            color: var(--primary);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            margin-top: 20px;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .feature-list i {
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 0;
+            background: var(--bg-alt);
+        }
+
+        .about-container {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-content {
+            flex: 1;
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .about-description {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .about-features {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .about-feature {
+            display: flex;
+            gap: 15px;
+        }
+
+        .about-feature i {
+            font-size: 24px;
+            color: var(--primary);
+            margin-top: 5px;
+        }
+
+        .about-feature h4 {
+            margin-bottom: 5px;
+        }
+
+        .about-feature p {
+            color: var(--text-light);
+        }
+
+        .about-visual {
+            flex: 1;
+        }
+
+        .visual-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .visual-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-alt);
+            padding: 60px 0 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .footer-logo span {
+            margin-left: 10px;
+        }
+
+        .footer-section p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .footer-bottom i {
+            color: var(--accent);
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 99;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .hero-visual {
+                display: none;
+            }
+            
+            .about-container {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: var(--bg);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 50px;
+                transition: var(--transition);
+                z-index: 99;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+
+            .nav-actions {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .hero-stats {
+                justify-content: space-between;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <img src="https://sman2lamongan.sch.id/wp-content/uploads/2024/10/Desain_tanpa_judul__3_-removebg-preview.png" alt="FinEdu Logo" class="logo-image">
+                <span>FINLEARN</span>
+            </div>
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <span class="loading-text">Memuat Aplikasi...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Background Elements -->
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+    </div>
+
+    <div class="container">
+        <!-- Navigation -->
+        <header>
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <div class="logo">
+                        <img src="https://sman2lamongan.sch.id/wp-content/uploads/2024/10/Desain_tanpa_judul__3_-removebg-preview.png" alt="FinEdu Logo" class="logo-image">
+                        <span>FINLEARN</span>
+                    </div>
+                </div>
+                
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link active">Beranda</a></li>
+                    <li><a href="#features" class="nav-link">Fitur</a></li>
+                    <li><a href="#about" class="nav-link">Tentang</a></li>
+                    <li><a href="#contact" class="nav-link">Kontak</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <div class="theme-toggle">
+                        <input type="checkbox" id="themeSwitch" class="theme-checkbox">
+                        <label for="themeSwitch" class="theme-label">
+                            <i class="fas fa-sun"></i>
+                            <i class="fas fa-moon"></i>
+                            <span class="theme-ball"></span>
+                        </label>
+                    </div>
+                    <div class="nav-login">
+                        <a href="login.html" class="btn-login admin">
+                            <i class="fas fa-user-shield"></i>
+                            <span>Admin</span>
+                        </a>
+                        <a href="login.html" class="btn-login guru">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <span>Guru</span>
+                        </a>
+                        <a href="login.html" class="btn-login siswa">
+                            <i class="fas fa-user-graduate"></i>
+                            <span>Siswa</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <main>
+            <section id="home" class="hero">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span>Platform Financial Literacy No. 1</span>
+                    </div>
+                    <h1 class="hero-title">
+                        <span class="title-line">Tingkatkan</span>
+                        <span class="title-line highlight">Literasi Keuangan</span>
+                        <span class="title-line">dengan FINLEARN</span>
+                    </h1>
+                    <p class="hero-description">
+                        Aplikasi pembelajaran financial literacy terintegrasi untuk siswa, guru, dan administrator dengan fitur lengkap dan interface modern.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="login.html" class="btn btn-primary">
+                            <span>Mulai Belajar</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="#features" class="btn btn-secondary">
+                            <span>Jelajahi Fitur</span>
+                            <i class="fas fa-play-circle"></i>
+                        </a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <div class="stat-number" data-count="5000">0</div>
+                            <div class="stat-label">Siswa Aktif</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" data-count="150">0</div>
+                            <div class="stat-label">Guru Professional</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" data-count="100">0</div>
+                            <div class="stat-label">Materi Premium</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="visual-container">
+                        <div class="floating-card card-1">
+                            <i class="fas fa-coins"></i>
+                            <h4>Simulator Budgeting</h4>
+                            <p>Praktik mengelola keuangan</p>
+                        </div>
+                        <div class="floating-card card-2">
+                            <i class="fas fa-tasks"></i>
+                            <h4>Kuis Interaktif</h4>
+                            <p>4 jenis soal berbeda</p>
+                        </div>
+                        <div class="floating-card card-3">
+                            <i class="fas fa-chart-bar"></i>
+                            <h4>Dashboard Analytics</h4>
+                            <p>Monitor perkembangan</p>
+                        </div>
+                        <div class="main-visual">
+                            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Financial Education">
+                            <div class="visual-glow"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features" class="features">
+                <div class="section-header">
+                    <h2 class="section-title">Fitur Unggulan</h2>
+                    <p class="section-subtitle">Platform lengkap untuk pembelajaran financial literacy</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card" data-aos="fade-up">
+                        <div class="feature-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h3>Materi Pembelajaran</h3>
+                        <p>Konten financial literacy terstruktur dengan animasi interaktif dan studi kasus nyata</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Modul lengkap</li>
+                            <li><i class="fas fa-check"></i> Video pembelajaran</li>
+                            <li><i class="fas fa-check"></i> Studi kasus</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="feature-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3>Kuis & Evaluasi</h3>
+                        <p>4 jenis soal berbeda dengan sistem penilaian real-time dan analisis mendalam</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Benar/Salah</li>
+                            <li><i class="fas fa-check"></i> Pilihan Ganda</li>
+                            <li><i class="fas fa-check"></i> Pilihan Kompleks</li>
+                            <li><i class="fas fa-check"></i> Essay & Alasan</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3>Simulator Budgeting</h3>
+                        <p>Praktik langsung mengelola keuangan dengan simulator kas yang realistis</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Simulator kas pribadi</li>
+                            <li><i class="fas fa-check"></i> Laporan keuangan</li>
+                            <li><i class="fas fa-check"></i> Analisis pengeluaran</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Dashboard Analytics</h3>
+                        <p>Monitor perkembangan belajar dengan visualisasi data yang informatif</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Progress belajar</li>
+                            <li><i class="fas fa-check"></i> Statistik kuis</li>
+                            <li><i class="fas fa-check"></i> Rekomendasi belajar</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="feature-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <h3>Manajemen Kelas</h3>
+                        <p>Fitur lengkap untuk guru mengelola materi, kuis, dan monitoring siswa</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Kelola materi</li>
+                            <li><i class="fas fa-check"></i> Buat kuis custom</li>
+                            <li><i class="fas fa-check"></i> Pantau siswa</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                        <div class="feature-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h3>Admin Super</h3>
+                        <p>Kontrol penuh sistem, pengaturan institusi, dan manajemen pengguna</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Kelola sistem</li>
+                            <li><i class="fas fa-check"></i> Setting institusi</li>
+                            <li><i class="fas fa-check"></i> Manajemen user</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="about">
+                <div class="about-container">
+                    <div class="about-content">
+                        <h2>Tentang FINLEARN</h2>
+                        <p class="about-description">
+                            FINLEARN adalah platform revolusioner untuk pembelajaran financial literacy yang mengintegrasikan teknologi modern dengan kurikulum pendidikan keuangan terbaik.
+                        </p>
+                        <div class="about-features">
+                            <div class="about-feature">
+                                <i class="fas fa-rocket"></i>
+                                <div>
+                                    <h4>Modern & Interaktif</h4>
+                                    <p>Interface yang user-friendly dengan animasi menarik</p>
+                                </div>
+                            </div>
+                            <div class="about-feature">
+                                <i class="fas fa-shield-alt"></i>
+                                <div>
+                                    <h4>Aman & Terpercaya</h4>
+                                    <p>Data tersimpan aman dengan sistem keamanan berlapis</p>
+                                </div>
+                            </div>
+                            <div class="about-feature">
+                                <i class="fas fa-mobile-alt"></i>
+                                <div>
+                                    <h4>Responsive Design</h4>
+                                    <p>Akses optimal dari desktop, tablet, maupun smartphone</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-visual">
+                        <div class="visual-card">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="About FINLEARN">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta">
+                <div class="cta-container">
+                    <div class="cta-content">
+                        <h2>Ready to Transform Financial Education?</h2>
+                        <p>Bergabung dengan ribuan pengguna yang sudah merasakan manfaat FINLEARN</p>
+                    </div>
+                    <div class="cta-buttons">
+                        <a href="login.html" class="btn btn-primary btn-large">
+                            <span>Mulai Sekarang</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="#contact" class="btn btn-secondary btn-large">
+                            <span>Demo Gratis</span>
+                            <i class="fas fa-play"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="https://sman2lamongan.sch.id/wp-content/uploads/2024/10/Desain_tanpa_judul__3_-removebg-preview.png" alt="FINLEARN Logo" class="logo-image">
+                        <span>FINLEARN</span>
+                    </div>
+                    <p>Platform Financial Literacy terdepan untuk pendidikan Indonesia yang lebih baik.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Beranda</a></li>
+                        <li><a href="#features">Fitur</a></li>
+                        <li><a href="#about">Tentang</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Login</h4>
+                    <ul>
+                        <li><a href="login.html">Admin</a></li>
+                        <li><a href="login.html">Guru</a></li>
+                        <li><a href="login.html">Siswa</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FINLEARN. All rights reserved. | Developed with <i class="fas fa-heart"></i> for Better Education</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const progressFill = document.querySelector('.progress-fill');
+            
+            // Simulate loading progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    setTimeout(() => {
+                        loadingScreen.style.opacity = '0';
+                        loadingScreen.style.visibility = 'hidden';
+                    }, 500);
+                }
+                progressFill.style.width = `${progress}%`;
+            }, 200);
+        });
+
+        // Theme Toggle
+        const themeSwitch = document.getElementById('themeSwitch');
+        themeSwitch.addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode', this.checked);
+            localStorage.setItem('darkMode', this.checked);
+        });
+
+        // Load saved theme preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            themeSwitch.checked = true;
+            document.body.classList.add('dark-mode');
+        }
+
+        // Mobile Menu Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        hamburger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Back to Top Button
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Animate Stats Counter
+        const stats = document.querySelectorAll('.stat-number');
+        
+        const observerOptions = {
+            threshold: 0.5
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = entry.target;
+                    const count = parseInt(target.getAttribute('data-count'));
+                    const duration = 2000; // 2 seconds
+                    const step = count / (duration / 16); // 60fps
+                    let current = 0;
+                    
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= count) {
+                            current = count;
+                            clearInterval(timer);
+                        }
+                        target.textContent = Math.floor(current);
+                    }, 16);
+                    
+                    observer.unobserve(target);
+                }
+            });
+        }, observerOptions);
+        
+        stats.forEach(stat => {
+            observer.observe(stat);
+        });
+
+        // Active Navigation Link
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        window.addEventListener('scroll', function() {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
